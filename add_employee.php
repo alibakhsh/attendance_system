@@ -104,6 +104,27 @@
                                                         </div>
                                                         <!--/span-->
                                                     </div>
+                                                    <div class="row-fluid">
+                                                        <!--/span-->
+                                                        <div class="span6 ">
+                                                            <div class="control-group">
+                                                                <label class="control-label"> User Name </label>
+                                                                <div class="controls">
+                                                                    <input type="text" name="user" class="m-wrap span12" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="span6 ">
+                                                            <div class="control-group">
+                                                                <label class="control-label"> Password </label>
+                                                                <div class="controls">
+                                                                    <input type="password" name="password" class="m-wrap span12" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!--/span-->
+                                                    </div>
+                                                    
 
                                                     <!--/row-->
                                                     <div class="form-actions">
