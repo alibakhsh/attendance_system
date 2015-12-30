@@ -1,7 +1,7 @@
 <?php
 include 'left.php';
 
-$sql = 'SELECT id, name, designation FROM emp_profile';
+$sql = 'SELECT employee_id, name, designation FROM emp_profile';
 mysqli_select_db($conn, $dbname);
 $retval = mysqli_query($conn, $sql);
 
@@ -57,7 +57,7 @@ if (!$retval) {
                                     ?>
                                     <tr class="odd gradeX">
                                         <td><input type="checkbox" class="checkboxes" value="1" /></td>
-                                        <td><?php echo $row['id'] ?></td>
+                                        <td><?php echo $row['employee_id'] ?></td>
                                         <td><?php echo $row['name'] ?></td>
                                         <td><?php echo $row['designation'] ?></td>
                                         <td><a class="btn red icn-only mini" href="#"><i class="icon-remove icon-white"></i></a>

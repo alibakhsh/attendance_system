@@ -1,6 +1,17 @@
 <?php 
+ session_start();
+ 
+ include 'header.php';
 
- include 'header.php';?>
+if(!isset($_SESSION['user']))
+{
+    header("Location: index.php");
+}
+$res=mysqli_query($conn, "SELECT * FROM emp_profile WHERE employee_id=".$_SESSION['user']);
+$userRow=mysqli_fetch_array($res);
+ 
+ 
+ ?>
     <!-- END HEAD -->
     <!-- BEGIN BODY -->
     <body class="page-header-fixed" onLoad="startclock()">
@@ -10,7 +21,7 @@
             <div class="navbar-inner">
                 <div class="container-fluid">
                     <!-- BEGIN LOGO -->
-                    <a class="brand" href="index.php">
+                    <a class="brand" href="home.php">
                         Attendance Management System
                     </a>
                     <!-- END LOGO -->
@@ -37,7 +48,7 @@
                         <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
                     </li>
                     <li class="start active ">
-                        <a href="index.php">
+                        <a href="home.php">
                             <i class="icon-home"></i> 
                             <span class="title">Dashboard</span>
                             <span class="selected"></span>
@@ -76,7 +87,9 @@
                     <li class="">
                         <a href="javascript:;">
                             <i class="icon-user"></i> 
-                            <span class="title">Log Out</span>
+                            <span class="title">
+                                <?php echo $userRow['username']; ?>&nbsp;<a href="logout.php?logout">Log Out</a>
+                                </span>
                             <span class="arrow "></span>
                         </a>
                     </li>

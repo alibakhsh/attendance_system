@@ -1,5 +1,13 @@
 <?php 
  include 'left.php';
+ 
+ $sql = 'SELECT employee_id, name, designation FROM emp_profile';
+mysqli_select_db($conn, $dbname);
+$retval = mysqli_query($conn, $sql);
+
+if (!$retval) {
+    die('Could not get data: ' . mysql_error());
+}
  ?>
             <!-- BEGIN PAGE -->  
             <div class="page-content">
