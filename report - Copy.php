@@ -1,22 +1,39 @@
 <?php 
-include 'left.php';
-$min = isset($_POST['fromDate']);
-$max = isset($_POST['toDate']);
+ include 'left.php';
  
+$sql = 'SELECT employee_id, date, time_in, status FROM time_data';
+mysqli_select_db($conn, $dbname);
+$retval = mysqli_query($conn, $sql);
 
-if(!isset($cmd))
-{
-
-    $sql = "SELECT * FROM time_data"; // Would display all rows
-if(isset($_POST['fromDate']) && !empty($_POST['fromDate']) && isset($_POST['toDate']) && !empty($_POST['toDate'])){ // if both dates are set and not empty...
-    $sql .= " WHERE date BETWEEN '".$_POST['fromDate']."' AND '".$_POST['toDate']."'"; // ...filter dates
+if (!$retval) {
+    die('Could not get data: ' . mysql_error());
 }
-$result = mysqli_query($conn,$sql);
-    // $result = mysqli_query($conn, "SELECT * FROM time_data");  
-// $sql="SELECT * FROM time_data WHERE date BETWEEN '".$min."' AND '".$max."'";
-// $result = mysqli_query($conn, $sql);
 
-//  SELECT time_in, time_out, TIMEDIFF((time_out), time_in) AS total_time FROM time_data;
+$sql_timein = 'SELECT time_in FROM time_data';
+$timein = mysqli_query($conn, $sql_timein);
+if ($result = $conn->query($sql_timein)) {
+    while ($row = $result->fetch_object()) {
+
+        $time_in = $row->time_in;
+    }
+    // $result->close();
+};
+
+$sql_timeout = 'SELECT time_out FROM time_data_out';
+$timeout = mysqli_query($conn, $sql_timeout);
+if ($result = $conn->query($sql_timeout)) {
+    while ($row = $result->fetch_object()) {
+
+        $time_out = $row->time_out;
+    }
+    // $result->close();
+};
+
+
+$in = new DateTime($time_in);
+$out = new DateTime($time_out);
+$diff = $in->diff($out);
+
 
  ?>
             <!-- BEGIN PAGE -->  
@@ -52,13 +69,13 @@ $result = mysqli_query($conn,$sql);
                                     <div class="caption"><i class="icon-user"></i> Attendance Report </div>
                                 </div>
                                 <div class="portlet-body">
-                                    <form class="form-vertical login-form" action="" method="POST">
+                                    <form class="form-vertical login-form" action="index.html">
                                         <div class="span4 ">
                                             <div class="control-group">
                                                 <label class="control-label"> Start of Date </label>
                                                 <div class="controls">
-                                                    <div data-date-viewmode="years" data-date-format="yyyy-mm-dd" data-date="2016-01-01" class="input-append date date-picker">
-                                                        <input  name="fromDate" type="text" value="" size="16" readonly="" class="m-wrap m-ctrl-large  date-picker"><span class="add-on"><i class="icon-calendar"></i></span>
+                                                    <div data-date-viewmode="years" data-date-format="dd-mm-yyyy" data-date="12-02-2012" class="input-append date date-picker">
+                                                        <input type="text" value="" size="16" readonly="" class="m-wrap m-ctrl-large  date-picker"><span class="add-on"><i class="icon-calendar"></i></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -68,8 +85,8 @@ $result = mysqli_query($conn,$sql);
                                             <div class="control-group">
                                                 <label class="control-label"> End of Date </label>
                                                 <div class="controls">
-                                                    <div data-date-viewmode="years" data-date-format="yyyy-mm-dd" data-date="2016-01-01" class="input-append date date-picker">
-                                                        <input name="toDate" type="text" value="" size="16" readonly="" class="m-wrap m-ctrl-large  date-picker"><span class="add-on"><i class="icon-calendar"></i></span>
+                                                    <div data-date-viewmode="years" data-date-format="dd-mm-yyyy" data-date="12-02-2012" class="input-append date date-picker">
+                                                        <input type="text" value="" size="16" readonly="" class="m-wrap m-ctrl-large  date-picker"><span class="add-on"><i class="icon-calendar"></i></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -95,67 +112,30 @@ $result = mysqli_query($conn,$sql);
                                             <tr>
                                                 <th> Date </th>
                                                 <th> Status </th>
-                                                <th> Time In </th>
-                                                <th> Time Out </th>
+                                                <th> Working Hours </th>
                                                 <th> Worked Hours </th>
-                                                
+                                                <th> Less Hours </th>
+                                                <th> Extra Hours </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
                                             <?php
-                                while($r=mysqli_fetch_array($result)){      
-      $date=$r["date"];
-      $ss_timestart=$r["time_in"];
-      $ss_timeend=$r["time_out"];
-      $status=$r["status"];
-
-      // $totaltime = $ss_timestart=$r["time_in"] + $ss_timeend=$r["time_out"];
+                                while ($row = mysqli_fetch_array($retval)) {
                                     ?>
                                             
-                                            
                                             <tr class="odd gradeX">
-                                                <td><?php echo "$date"; ?></td>
-                                                <th><?php echo "$status"; ?></th>
-                                                <th><?php echo "$ss_timestart"; ?></th>
-                                                <th><?php echo "$ss_timeend"; ?></th>
-                                                <th><?php  $date1 = "$date"; $time1 = "$ss_timestart";
-            $date2 = "$date"; $time2 = "$ss_timeend";
-            $before = strtotime($date1 . " " . $time1);
-            $after = strtotime($date2 . " " . $time2);
-            $diff = $after - $before;
-            $hours = floor($diff / 3600);
-            $minutes = floor(($diff - $hours * 3600) / 60);
-            $seconds = $diff - $hours * 3600 - $minutes * 60;
-    echo "$hours:$minutes:$seconds";?></th>
-
-                                                
-
-
-
-                                                
-                                                
+                                                <td><?php echo $row['date'] ?></td>
+                                                <th><?php echo $row['status'] ?></th>
+                                                <th>9</th>
+                                                <th><?php echo $diff->format("%H:%I:%S");?></th>
+                                                <th><?php ?></th>
+                                                <th><?php echo $row['time_in'] ?></th>
                                             </tr>
-
-                                            <?php
+                                           <?php
                                 }
-
-
-}
                                 ?>          
-                                             
 
                                         </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th> Date </th>
-                                                <th> Status </th>
-                                                <th> Time In </th>
-                                                <th> Time Out </th>
-                                                <th>  </th>
-                                                
-                                            </tr>
-                                        </tfoot>
                                     </table>
 
                                 </div>

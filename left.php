@@ -1,7 +1,7 @@
 <?php 
- session_start();
+session_start();
  
- include 'header.php';
+include 'header.php';
 
 if(!isset($_SESSION['user']))
 {
@@ -9,8 +9,6 @@ if(!isset($_SESSION['user']))
 }
 $res=mysqli_query($conn, "SELECT * FROM emp_profile WHERE employee_id=".$_SESSION['user']);
 $userRow=mysqli_fetch_array($res);
- 
- 
  ?>
     <!-- END HEAD -->
     <!-- BEGIN BODY -->
